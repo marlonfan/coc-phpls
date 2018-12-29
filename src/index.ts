@@ -91,10 +91,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     fsWatcher.onDidChange(onDidChange);
 
     readAllFile(workspace.rootPath)
-      .then(files => files.map(file => {
-        workspace.showMessage(file)
-        return Uri.file(file)
-      }))
+      .then(files => files.map(file => Uri.file(file)))
       .then(uriArray => {
         let token: CancellationToken;
         workspace.showMessage('Indexing started.');
