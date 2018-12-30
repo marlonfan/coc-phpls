@@ -1,8 +1,6 @@
-import { ExtensionContext, LanguageClient, ServerOptions, workspace, services, TransportKind, LanguageClientOptions, WorkspaceConfiguration, ProvideCompletionItemsSignature, FileSystemWatcher } from 'coc.nvim'
-import { TextDocument, Position, CompletionItem, CompletionList, InsertTextFormat, DocumentSelector } from 'vscode-languageserver-protocol'
-import { CompletionContext } from 'vscode-languageserver-protocol'
+import { ExtensionContext, LanguageClient, ServerOptions, workspace, services, TransportKind, LanguageClientOptions, FileSystemWatcher } from 'coc.nvim'
+import { DocumentSelector } from 'vscode-languageserver-protocol'
 import { CancellationToken } from 'vscode-jsonrpc'
-import { ProviderResult } from 'coc.nvim/lib/provider'
 import Uri from 'vscode-uri';
 import Glob from 'glob'
 
@@ -47,34 +45,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
       fileEvents: fsWatcher
     },
     outputChannelName: 'php',
-    initializationOptions: {},
-    middleware: {
-      provideCompletionItem: (
-        document: TextDocument,
-        position: Position,
-        context: CompletionContext,
-        token: CancellationToken,
-        next: ProvideCompletionItemsSignature
-      ): ProviderResult<CompletionItem[] | CompletionList> => {
-        return Promise.resolve(next(document, position, context, token)).then((res: CompletionItem[] | CompletionList) => {
-          let doc = workspace.getDocument(document.uri)
-          if (!doc) return []
-          let items: CompletionItem[] = res.hasOwnProperty('isIncomplete') ? (res as CompletionList).items : res as CompletionItem[]
-          let pre = doc.getline(position.line).slice(0, position.character)
-          // searching for class name
-          if (/(^|\s)\.\w*$/.test(pre)) {
-            items = items.filter(o => o.label.startsWith('.'))
-            items.forEach(fixItem)
-          }
-          if (context.triggerCharacter == ':'
-            || /\:\w*$/.test(pre)) {
-            items = items.filter(o => o.label.startsWith(':'))
-            items.forEach(fixItem)
-          }
-          return items
-        })
-      }
-    }
+    initializationOptions: {}
   }
 
   let client = new LanguageClient('php', 'PHP Language Server', serverOptions, clientOptions)
@@ -90,25 +61,21 @@ export async function activate(context: ExtensionContext): Promise<void> {
     fsWatcher.onDidCreate(onDidCreate);
     fsWatcher.onDidChange(onDidChange);
 
+    let startedTime: Date
+
     readAllFile(workspace.rootPath)
       .then(files => files.map(file => Uri.file(file)))
       .then(uriArray => {
         let token: CancellationToken;
         workspace.showMessage('Indexing started.');
+        startedTime = new Date()
         return WorkspaceDiscovery.checkCacheThenDiscover(uriArray, true, token);
       })
       .then(() => {
-        workspace.showMessage("Indexed php files");
+        let usedTime: number = Math.abs(new Date().getTime() - startedTime.getTime())
+        workspace.showMessage("Indexed php files, times: " + usedTime + "ms");
       })
   }, 1000)
-}
-
-function fixItem(item: CompletionItem): void {
-  item.data = item.data || {}
-  item.data.abbr = item.label
-  item.label = item.label.slice(1)
-  item.textEdit = null
-  item.insertTextFormat = InsertTextFormat.PlainText
 }
 
 function onDidDelete(uri: Uri) {
