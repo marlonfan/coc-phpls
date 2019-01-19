@@ -48,13 +48,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
     initializationOptions: {}
   }
 
-  let client = new LanguageClient('php', 'PHP Language Server', serverOptions, clientOptions)
+  let client = new LanguageClient('phpls', 'PHP Language Server', serverOptions, clientOptions)
 
   subscriptions.push(
     services.registLanguageClient(client)
   )
 
-  setTimeout(() => {
+  client.onReady().then(async () => {
     WorkspaceDiscovery.client = client
 
     fsWatcher.onDidDelete(onDidDelete);
@@ -63,7 +63,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
     let startedTime: Date
 
-    readAllFile(workspace.rootPath)
+    return await readAllFile(workspace.rootPath)
       .then(files => files.map(file => Uri.file(file)))
       .then(uriArray => {
         let token: CancellationToken;
@@ -75,7 +75,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         let usedTime: number = Math.abs(new Date().getTime() - startedTime.getTime())
         workspace.showMessage("Indexed php files, times: " + usedTime + "ms");
       })
-  }, 1000)
+  })
 }
 
 function onDidDelete(uri: Uri) {

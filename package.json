@@ -1,6 +1,6 @@
 {
   "name": "coc-phpls",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "PHP language server extension for coc.nvim",
   "main": "lib/index.js",
   "publisher": "marlonfan",
@@ -33,6 +33,11 @@
           "type": "boolean",
           "default": true,
           "description": "is enable php lsp"
+        },
+        "phpls.trace.server": {
+          "type": "string",
+          "default": "",
+          "description": "enable phpls server trace log?"
         }
       }
     }
