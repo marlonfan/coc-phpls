@@ -91,12 +91,16 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
             if (res.hasOwnProperty('isIncomplete')) {
               let itemList = (res as CompletionList);
-              itemList.items.forEach(fixItem);
+              if (Array.isArray(itemList.items)) {
+                itemList.items.forEach(fixItem);
+              }
               return itemList;
             }
 
             let items = (res as CompletionItem[]);
-            items.forEach(fixItem);
+            if (Array.isArray(items)) {
+              items.forEach(fixItem);
+            }
             return items;
           }
         );
