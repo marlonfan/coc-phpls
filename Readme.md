@@ -12,7 +12,7 @@ In your vim/neovim, run command:
 
 ## Features
 
-Language server features provided by [intelephense-server](https://github.com/bmewburn/intelephense-server).
+Language server features provided by [intelephense-docs](https://github.com/bmewburn/intelephense-docs).
 
 ## Configuration options
 
