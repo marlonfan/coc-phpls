@@ -116,7 +116,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     }
   }
 
-  let languageClient = new LanguageClient(
+  languageClient = new LanguageClient(
     "phpls",
     "PHP Language Server",
     serverOptions,
