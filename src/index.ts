@@ -1,3 +1,5 @@
+import * as path from 'path'
+
 import {
   ExtensionContext,
   LanguageClient,
@@ -6,34 +8,39 @@ import {
   services,
   TransportKind,
   LanguageClientOptions,
-  FileSystemWatcher,
   CompletionContext,
   ProvideCompletionItemsSignature,
-  ProviderResult
+  ProviderResult,
+  commands
 } from "coc.nvim";
+
 import {
   DocumentSelector,
   CompletionItem,
   TextDocument,
   Position,
   CompletionList,
-  DidOpenTextDocumentNotification
+  NotificationType,
+  RequestType
 } from "vscode-languageserver-protocol";
+
 import { CancellationToken } from "vscode-jsonrpc";
-import Uri from "vscode-uri";
-import Glob from "glob";
+import * as fs from 'fs-extra';
 
-import { WorkspaceDiscovery } from "./workspaceDiscovery";
-import { CompleterResult } from "readline";
+const LanguageID = 'php';
+const VERSION = '1.0.13';
+const INDEXING_STARTED_NOTIFICATION = new NotificationType('indexingStarted');
+const INDEXING_ENDED_NOTIFICATION = new NotificationType('indexingEnded');
+const INDEX_WORKSPACE_REQUEST = new RequestType('indexWorkspace');
+const CANCEL_INDEXING_REQUEST = new RequestType('cancelIndexing');
 
-const sections = ["php"];
+let languageClient: LanguageClient;
 
 export async function activate(context: ExtensionContext): Promise<void> {
-  let { subscriptions } = context;
   let c = workspace.getConfiguration();
   const config = c.get("phpls") as any;
   const enable = config.enable;
-  const file = require.resolve("intelephense-server");
+  const file = require.resolve("intelephense");
 
   if (enable === false) return;
   if (!file) {
@@ -44,39 +51,40 @@ export async function activate(context: ExtensionContext): Promise<void> {
     return;
   }
 
-  const selector: DocumentSelector = [
-    {
-      language: "php",
-      scheme: "file"
-    }
-  ];
+  let serverModule:string;
+  serverModule = context.asAbsolutePath(path.join('node_modules', 'intelephense', 'lib', 'intelephense.js'));
+
+  // The debug options for the server
+	let debugOptions = {
+		execArgv: ["--nolazy", "--inspect=6039", "--trace-warnings", "--preserve-symlinks"],
+		detached: true
+	};
+
 
   let serverOptions: ServerOptions = {
-    module: file,
-    args: ["--node-ipc"],
-    transport: TransportKind.ipc,
-    options: {
-      cwd: workspace.root,
-      execArgv: config.execArgv || []
-    }
-  };
+    run: { module: serverModule, transport: TransportKind.ipc },
+		debug: { module: serverModule, transport: TransportKind.ipc, options: debugOptions  }
+  }
 
-  let fsWatcher: FileSystemWatcher = workspace.createFileSystemWatcher(
-    "**/*.php",
-    true,
-    false,
-    true
-  );
+  // todo: implements createMiddleware method
+  // let middleware = createMiddleware(() => {
+	// 	return languageClient;
+  // });
 
   let clientOptions: LanguageClientOptions = {
-    documentSelector: selector,
-    synchronize: {
-      configurationSection: sections,
-      fileEvents: fsWatcher
-    },
-    outputChannelName: "php",
-    initializationOptions: {},
-    middleware: {
+		documentSelector: [
+			{ language: LanguageID, scheme: 'file' },
+			{ language: LanguageID, scheme: 'untitled' }
+		],
+		synchronize: {
+			// Notify the server about file changes to php in the workspace
+			fileEvents: workspace.createFileSystemWatcher(workspaceFilesIncludeGlob()),
+		},
+		initializationOptions: {
+			storagePath: context.storagePath,
+			clearCache: false
+		},
+		middleware: {
       provideCompletionItem: (
         document: TextDocument,
         position: Position,
@@ -106,68 +114,52 @@ export async function activate(context: ExtensionContext): Promise<void> {
         );
       }
     }
-  };
+  }
 
-  let client = new LanguageClient(
+  let languageClient = new LanguageClient(
     "phpls",
     "PHP Language Server",
     serverOptions,
     clientOptions
   );
 
-  subscriptions.push(services.registLanguageClient(client));
+  let ready = languageClient.onReady();
 
-  client.onReady().then(async () => {
-    WorkspaceDiscovery.client = client;
-
-    fsWatcher.onDidDelete(onDidDelete);
-    fsWatcher.onDidCreate(onDidCreate);
-    fsWatcher.onDidChange(onDidChange);
+  ready.then(() => {
+    languageClient.info('Intelephense ' + VERSION);
 
     let startedTime: Date;
 
-    return await readAllFile(workspace.rootPath)
-      .then(files => files.map(file => Uri.file(file)))
-      .then(uriArray => {
-        let token: CancellationToken;
-        workspace.showMessage("Indexing started.");
-        startedTime = new Date();
-        return WorkspaceDiscovery.checkCacheThenDiscover(uriArray, true, token);
-      })
-      .then(() => {
-        let usedTime: number = Math.abs(
-          new Date().getTime() - startedTime.getTime()
-        );
-        workspace.showMessage("Indexed php files, times: " + usedTime + "ms");
-      });
-  });
-}
+		languageClient.onNotification(INDEXING_STARTED_NOTIFICATION.method, () => {
+      startedTime = new Date();
+			workspace.showMessage('intelephense indexing ...');
+		});
 
-function onDidDelete(uri: Uri) {
-  WorkspaceDiscovery.forget(uri);
-}
+		languageClient.onNotification(INDEXING_ENDED_NOTIFICATION.method, () => {
+      let usedTime: number = Math.abs(
+        new Date().getTime() - startedTime.getTime()
+      );
+			workspace.showMessage("Indexed php files, times: " + usedTime + "ms");
+		});
+  })
 
-function onDidChange(uri: Uri) {
-  WorkspaceDiscovery.delayedDiscover(uri);
-}
+  let indexWorkspaceDisposable = commands.registerCommand('intelephense.index.workspace', () => languageClient.sendRequest(INDEX_WORKSPACE_REQUEST.method));
+  let cancelIndexingDisposable = commands.registerCommand('intelephense.cancel.indexing', () => languageClient.sendRequest(CANCEL_INDEXING_REQUEST.method));
 
-function onDidCreate(uri: Uri) {
-  onDidChange(uri);
-}
-
-function readAllFile(root: string) {
-  return new Promise<string[]>((resolve, reject) => {
-    Glob(root + "/**/*.php", (err, matches) => {
-      if (err == null) {
-        resolve(matches);
-      }
-      reject(err);
-    });
-  });
+  context.subscriptions.push(
+    services.registLanguageClient(languageClient),
+		indexWorkspaceDisposable,
+		cancelIndexingDisposable,
+  );
 }
 
 function fixItem(item: CompletionItem): void {
   if (/^\\\w+/.test(item.insertText) && !/^(\\\w+){2,}/.test(item.insertText)) {
     item.insertText = item.insertText.replace('\\', '');
   }
+}
+
+function workspaceFilesIncludeGlob() {
+  // todo: need include glob files
+  return `{}`
 }
