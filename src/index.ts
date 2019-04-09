@@ -51,9 +51,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
     return;
   }
 
-  let serverModule:string;
-  serverModule = context.asAbsolutePath(path.join('node_modules', 'intelephense', 'lib', 'intelephense.js'));
-
   // The debug options for the server
 	let debugOptions = {
 		execArgv: ["--nolazy", "--inspect=6039", "--trace-warnings", "--preserve-symlinks"],
@@ -62,8 +59,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
 
   let serverOptions: ServerOptions = {
-    run: { module: serverModule, transport: TransportKind.ipc },
-		debug: { module: serverModule, transport: TransportKind.ipc, options: debugOptions  }
+    run: { module: file, transport: TransportKind.ipc },
+		debug: { module: file, transport: TransportKind.ipc, options: debugOptions  }
   }
 
   // todo: implements createMiddleware method
