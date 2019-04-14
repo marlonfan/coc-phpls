@@ -73,10 +73,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
 			{ language: LanguageID, scheme: 'file' },
 			{ language: LanguageID, scheme: 'untitled' }
 		],
-		synchronize: {
-			// Notify the server about file changes to php in the workspace
-			fileEvents: workspace.createFileSystemWatcher(workspaceFilesIncludeGlob()),
-		},
 		initializationOptions: {
 			storagePath: context.storagePath,
 			clearCache: false
@@ -154,9 +150,4 @@ function fixItem(item: CompletionItem): void {
   if (/^\\\w+/.test(item.insertText) && !/^(\\\w+){2,}/.test(item.insertText)) {
     item.insertText = item.insertText.replace('\\', '');
   }
-}
-
-function workspaceFilesIncludeGlob() {
-  // todo: need include glob files
-  return `{}`
 }
