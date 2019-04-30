@@ -1,4 +1,4 @@
-import Uri from 'vscode-uri'
+import Uri from 'vscode-uri';
 
 export const EMBEDDED_CONTENT_SCHEME = 'embedded-content';
 

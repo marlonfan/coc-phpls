@@ -28,7 +28,7 @@ import { CancellationToken } from "vscode-jsonrpc";
 import * as fs from 'fs-extra';
 
 const LanguageID = 'php';
-const VERSION = '1.0.13';
+const VERSION = '1.0.14';
 const INDEXING_STARTED_NOTIFICATION = new NotificationType('indexingStarted');
 const INDEXING_ENDED_NOTIFICATION = new NotificationType('indexingEnded');
 const INDEX_WORKSPACE_REQUEST = new RequestType('indexWorkspace');
