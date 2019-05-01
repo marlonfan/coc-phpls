@@ -1,67 +1,209 @@
 {
-  "name": "coc-phpls",
-  "version": "2.0.4",
-  "description": "PHP language server extension for coc.nvim",
-  "main": "lib/index.js",
-  "publisher": "marlonfan",
-  "engines": {
-    "coc": "^0.0.66"
-  },
-  "keywords": [
-    "coc.nvim",
-    "php",
-    "phpls"
-  ],
-  "scripts": {
-    "clean": "rimraf lib",
-    "build": "tsc -p tsconfig.json",
-    "prepare": "yarn clean && yarn build"
-  },
-  "activationEvents": [
-    "onLanguage:php"
-  ],
-  "contributes": {
-    "configuration": {
-      "title": "php configuration",
-      "properties": {
-        "phpls.path": {
-          "type": "string",
-          "default": "",
-          "description": "lsp server path"
-        },
-        "phpls.enable": {
-          "type": "boolean",
-          "default": true,
-          "description": "is enable php lsp"
-        },
-        "phpls.trace.server": {
-          "type": "string",
-          "default": "",
-          "description": "enable phpls server trace log?"
+    "name": "coc-phpls",
+    "version": "2.0.4",
+    "description": "PHP language server extension for coc.nvim",
+    "main": "lib/index.js",
+    "publisher": "marlonfan",
+    "engines": {
+        "coc": "^0.0.66"
+    },
+    "keywords": [
+        "coc.nvim",
+        "php",
+        "phpls"
+    ],
+    "scripts": {
+        "clean": "rimraf lib",
+        "build": "tsc -p tsconfig.json",
+        "prepare": "yarn clean && yarn build"
+    },
+    "activationEvents": [
+        "onLanguage:php"
+    ],
+    "contributes": {
+        "configuration": {
+            "title": "php configuration",
+            "properties": {
+                "phpls.path": {
+                    "type": "string",
+                    "default": "",
+                    "description": "lsp server path"
+                },
+                "phpls.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "is enable php lsp"
+                },
+                "phpls.trace.server": {
+                    "type": "string",
+                    "default": "",
+                    "description": "enable phpls server trace log?"
+                },
+                "intelephense.files.maxSize": {
+                    "type": "number",
+                    "default": 5000000,
+                    "description": "Maximum file size in bytes.",
+                    "scope": "window"
+                },
+                "intelephense.files.associations": {
+                    "type": "array",
+                    "default": [
+                        "*.php",
+                        "*.phtml"
+                    ],
+                    "description": "Configure glob patterns to make files available for language server features.",
+                    "scope": "window"
+                },
+                "intelephense.files.exclude": {
+                    "type": "array",
+                    "default": [
+                        "**/.git/**",
+                        "**/.svn/**",
+                        "**/.hg/**",
+                        "**/CVS/**",
+                        "**/.DS_Store/**",
+                        "**/node_modules/**",
+                        "**/bower_components/**",
+                        "**/vendor/**/{Test,test,Tests,tests}/**"
+                    ],
+                    "description": "Configure glob patterns to exclude certain files and folders from all language server features.",
+                    "scope": "window"
+                },
+                "intelephense.stubs": {
+                    "type": "array",
+                    "default": [
+                        "apache",
+                        "bcmath",
+                        "bz2",
+                        "calendar",
+                        "com_dotnet",
+                        "Core",
+                        "csprng",
+                        "ctype",
+                        "curl",
+                        "date",
+                        "dba",
+                        "dom",
+                        "enchant",
+                        "exif",
+                        "fileinfo",
+                        "filter",
+                        "fpm",
+                        "ftp",
+                        "gd",
+                        "hash",
+                        "iconv",
+                        "imap",
+                        "interbase",
+                        "intl",
+                        "json",
+                        "ldap",
+                        "libxml",
+                        "mbstring",
+                        "mcrypt",
+                        "mssql",
+                        "mysqli",
+                        "oci8",
+                        "odcb",
+                        "openssl",
+                        "password",
+                        "pcntl",
+                        "pcre",
+                        "PDO",
+                        "pdo_ibm",
+                        "pdo_mysql",
+                        "pdo_pgsql",
+                        "pdo_sqlite",
+                        "pgsql",
+                        "Phar",
+                        "posix",
+                        "pspell",
+                        "readline",
+                        "recode",
+                        "Reflection",
+                        "regex",
+                        "session",
+                        "shmop",
+                        "SimpleXML",
+                        "snmp",
+                        "soap",
+                        "sockets",
+                        "sodium",
+                        "SPL",
+                        "sqlite3",
+                        "standard",
+                        "superglobals",
+                        "sybase",
+                        "sysvmsg",
+                        "sysvsem",
+                        "sysvshm",
+                        "tidy",
+                        "tokenizer",
+                        "wddx",
+                        "xml",
+                        "xmlreader",
+                        "xmlrpc",
+                        "xmlwriter",
+                        "Zend OPcache",
+                        "zip",
+                        "zlib",
+                        "ssh2"
+                    ],
+                    "description": "Configure stub files for built in symbols and common extensions. The default setting includes PHP core and all bundled extensions.",
+                    "scope": "window"
+                },
+                "intelephense.completion.insertUseDeclaration": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Use declarations will be automatically inserted for namespaced classes, traits, interfaces, functions, and constants.",
+                    "scope": "window"
+                },
+                "intelephense.completion.fullyQualifyGlobalConstantsAndFunctions": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Global namespace constants and functions will be fully qualified (prefixed with a backslash).",
+                    "scope": "window"
+                },
+                "intelephense.format.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables formatting",
+                    "scope": "window"
+                },
+                "intelephense.trace.server": {
+                    "type": "string",
+                    "enum": [
+                        "off",
+                        "messages",
+                        "verbose"
+                    ],
+                    "default": "off",
+                    "description": "Traces the communication between VSCode and the intelephense language server.",
+                    "scope": "window"
+                }
+            }
         }
-      }
+    },
+    "author": "marlon@tfan.net",
+    "license": "MIT",
+    "devDependencies": {
+        "@chemzqm/tsconfig": "^0.0.3",
+        "@chemzqm/tslint-config": "^1.0.18",
+        "@types/fs-extra": "^5.0.5",
+        "@types/glob": "^7.1.1",
+        "@types/node": "^11.13.8",
+        "coc.nvim": "^0.0.66",
+        "rimraf": "^2.6.3",
+        "tslint": "^5.16.0",
+        "typescript": "^3.4.5"
+    },
+    "dependencies": {
+        "fs-extra": "^7.0.1",
+        "glob": "^7.1.3",
+        "intelephense": "^1.0.14",
+        "tslib": "^1.9.3",
+        "vscode": "^1.1.33",
+        "vscode-languageclient": "^5.2.1",
+        "vscode-languageserver-protocol": "^3.14.1"
     }
-  },
-  "author": "marlon@tfan.net",
-  "license": "MIT",
-  "devDependencies": {
-    "@chemzqm/tsconfig": "^0.0.3",
-    "@chemzqm/tslint-config": "^1.0.18",
-    "@types/fs-extra": "^5.0.5",
-    "@types/glob": "^7.1.1",
-    "@types/node": "^11.13.8",
-    "coc.nvim": "^0.0.66",
-    "rimraf": "^2.6.3",
-    "tslint": "^5.16.0",
-    "typescript": "^3.4.5"
-  },
-  "dependencies": {
-    "fs-extra": "^7.0.1",
-    "glob": "^7.1.3",
-    "intelephense": "^1.0.14",
-    "tslib": "^1.9.3",
-    "vscode": "^1.1.33",
-    "vscode-languageclient": "^5.2.1",
-    "vscode-languageserver-protocol": "^3.14.1"
-  }
 }
