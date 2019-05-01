@@ -74,10 +74,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
             { language: LanguageID, scheme: 'untitled' }
         ],
         synchronize: {
-            fileEvents: [
-                workspace.createFileSystemWatcher('**/composer.json'),
-                workspace.createFileSystemWatcher('**/vendor/**')
-            ]
+            fileEvents: workspace.createFileSystemWatcher('**/vendor/**')
         },
         initializationOptions: {
             storagePath: context.storagePath,
