@@ -73,6 +73,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
             { language: LanguageID, scheme: 'file' },
             { language: LanguageID, scheme: 'untitled' }
         ],
+        synchronize: {
+            fileEvents: [
+                workspace.createFileSystemWatcher('**/composer.json'),
+                workspace.createFileSystemWatcher('**/vendor/**'),
+                workspace.createFileSystemWatcher('**/*.php')
+            ]
+        },
         initializationOptions: {
             storagePath: context.storagePath,
             clearCache: false
