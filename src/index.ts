@@ -76,8 +76,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         synchronize: {
             fileEvents: [
                 workspace.createFileSystemWatcher('**/composer.json'),
-                workspace.createFileSystemWatcher('**/vendor/**'),
-                workspace.createFileSystemWatcher('**/*.php')
+                workspace.createFileSystemWatcher('**/vendor/**')
             ]
         },
         initializationOptions: {
