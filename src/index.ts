@@ -73,9 +73,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
             { language: LanguageID, scheme: 'file' },
             { language: LanguageID, scheme: 'untitled' }
         ],
-        synchronize: {
-            fileEvents: workspace.createFileSystemWatcher('**/vendor/**')
-        },
         initializationOptions: {
             storagePath: context.storagePath,
             clearCache: false
