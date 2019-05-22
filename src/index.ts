@@ -1,5 +1,3 @@
-import * as path from 'path'
-
 import {
     ExtensionContext,
     LanguageClient,
@@ -15,7 +13,6 @@ import {
 } from "coc.nvim";
 
 import {
-    DocumentSelector,
     CompletionItem,
     TextDocument,
     Position,
@@ -25,7 +22,6 @@ import {
 } from "vscode-languageserver-protocol";
 
 import { CancellationToken } from "vscode-jsonrpc";
-import * as fs from 'fs-extra';
 
 const LanguageID = 'php';
 const VERSION = '1.0.14';
@@ -56,7 +52,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
         execArgv: ["--nolazy", "--inspect=6039", "--trace-warnings", "--preserve-symlinks"],
         detached: true
     };
-
 
     let serverOptions: ServerOptions = {
         run: { module: file, transport: TransportKind.ipc },
@@ -107,7 +102,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
                 );
             }
         }
-    }
+    };
 
     languageClient = new LanguageClient(
         "phpls",
@@ -134,7 +129,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
             );
             workspace.showMessage("Indexed php files, times: " + usedTime + "ms");
         });
-    })
+    });
 
     let indexWorkspaceDisposable = commands.registerCommand('intelephense.index.workspace', () => languageClient.sendRequest(INDEX_WORKSPACE_REQUEST.method));
     let cancelIndexingDisposable = commands.registerCommand('intelephense.cancel.indexing', () => languageClient.sendRequest(CANCEL_INDEXING_REQUEST.method));

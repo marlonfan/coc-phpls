@@ -1,6 +1,8 @@
 {
     "extends": "./node_modules/@chemzqm/tslint-config/tslint.json",
-    "rules": {},
+    "rules": {
+        "semicolon": [true, "always"]
+    },
     "linterOptions": {
         "exclude": []
     }
