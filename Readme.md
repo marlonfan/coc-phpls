@@ -24,7 +24,7 @@ Language server features provided by [intelephense-docs](https://github.com/bmew
 * Link extension
 
 ```bash
-cd ~/github/coc-phpls          && yarn link
+cd ~/github/coc-phpls       && yarn link
 cd ~/.config/coc/extensions && yarn link coc-phpls
 ```
 
