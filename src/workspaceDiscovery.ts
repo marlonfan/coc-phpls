@@ -1,7 +1,7 @@
 import * as fs from 'fs-extra';
 import { LanguageClient } from 'coc.nvim'
 import { TextDocumentItem, CancellationToken } from 'vscode-languageserver-protocol'
-import Uri from 'vscode-uri'
+import { URI } from 'vscode-uri'
 
 const discoverSymbolsRequestName = 'discoverSymbols';
 const discoverReferencesRequestName = 'discoverReferences';
@@ -14,16 +14,16 @@ export namespace WorkspaceDiscovery {
     export var maxFileSizeBytes: number;
 
     const delayedDiscoverDebounceTime = 500;
-    var delayedDiscoverUriArray: Uri[] = [];
+    var delayedDiscoverUriArray: URI[] = [];
     var delayedDiscoverTimer: NodeJS.Timer;
 
-    export function checkCacheThenDiscover(uriArray: Uri[], checkModTime: boolean, token: CancellationToken) {
+    export function checkCacheThenDiscover(uriArray: URI[], checkModTime: boolean, token: CancellationToken) {
         return knownDocumentsRequest(token).then((status) => {
             let timestamp = status.timestamp;
             let cachedUriSet = new Set<string>(status.documents);
-            let notKnown: Uri[] = [];
-            let known: Uri[] = [];
-            let uri: Uri;
+            let notKnown: URI[] = [];
+            let known: URI[] = [];
+            let uri: URI;
             let uriString: string;
 
             for (let n = 0, l = uriArray.length; n < l; ++n) {
@@ -47,30 +47,30 @@ export namespace WorkspaceDiscovery {
         });
     }
 
-    function modTime(uri: Uri): Promise<[Uri, number]> {
+    function modTime(uri: URI): Promise<[URI, number]> {
 
         return fs.stat(uri.fsPath).then((stats) => {
-            return <[Uri, number]>[uri, stats.mtime.getTime()];
+            return <[URI, number]>[uri, stats.mtime.getTime()];
         }).catch((err) => {
             if (err && err.message) {
                 client.warn(err.message);
             }
-            return <[Uri, number]>[uri, 0];
+            return <[URI, number]>[uri, 0];
         });
 
     }
 
-    function filterKnownByModtime(knownUriArray: Uri[], timestamp) {
+    function filterKnownByModtime(knownUriArray: URI[], timestamp) {
 
-        return new Promise<Uri[]>((resolve, reject) => {
+        return new Promise<URI[]>((resolve, reject) => {
 
             if (!timestamp || knownUriArray.length < 1) {
                 resolve(knownUriArray);
             }
 
-            let filtered: Uri[] = [];
+            let filtered: URI[] = [];
 
-            let onResolved = (result: [Uri, number]) => {
+            let onResolved = (result: [URI, number]) => {
                 if (result[1] > timestamp) {
                     //was modified since last shutdown
                     filtered.push(result[0]);
@@ -89,7 +89,7 @@ export namespace WorkspaceDiscovery {
             let count = knownUriArray.length;
             knownUriArray = knownUriArray.slice(0);
             let batchSize = Math.min(4, count);
-            let uri: Uri;
+            let uri: URI;
 
             while (batchSize-- > 0 && (uri = knownUriArray.pop())) {
                 modTime(uri).then(onResolved);
@@ -99,7 +99,7 @@ export namespace WorkspaceDiscovery {
 
     }
 
-    function forgetMany(uriArray: (Uri | string)[]) {
+    function forgetMany(uriArray: (URI | string)[]) {
 
         return new Promise<void>((resolve, reject) => {
 
@@ -128,7 +128,7 @@ export namespace WorkspaceDiscovery {
                 onFulfilled();
             }
 
-            let uri: Uri | string;
+            let uri: URI | string;
             while (batchSize-- > 0 && (uri = uriArray.pop())) {
                 forgetRequest(uri).then(onFulfilled, onFailed);
             }
@@ -137,11 +137,11 @@ export namespace WorkspaceDiscovery {
 
     }
 
-    export function discover(uriArray: Uri[], token?: CancellationToken) {
+    export function discover(uriArray: URI[], token?: CancellationToken) {
         return discoverSymbolsMany(uriArray, token).then(() => { return discoverReferencesMany(uriArray, token); });
     }
 
-    export function delayedDiscover(uri: Uri) {
+    export function delayedDiscover(uri: URI) {
         clearTimeout(delayedDiscoverTimer);
         delayedDiscoverTimer = undefined;
         if (delayedDiscoverUriArray.indexOf(uri) < 0) {
@@ -160,27 +160,27 @@ export namespace WorkspaceDiscovery {
         delayedDiscoverUriArray = [];
     }
 
-    export function forget(uri: Uri) {
+    export function forget(uri: URI) {
         return forgetRequest(uri);
     }
 
-    function discoverSymbols(uri: Uri) {
+    function discoverSymbols(uri: URI) {
         return readTextDocumentItem(uri).then(discoverSymbolsRequest);
     }
 
-    function discoverSymbolsMany(uriArray: Uri[], token?: CancellationToken) {
+    function discoverSymbolsMany(uriArray: URI[], token?: CancellationToken) {
         return discoverMany(discoverSymbols, uriArray, token);
     }
 
-    function discoverReferences(uri: Uri) {
+    function discoverReferences(uri: URI) {
         return readTextDocumentItem(uri).then(discoverReferencesRequest);
     }
 
-    function discoverReferencesMany(uriArray: Uri[], token?: CancellationToken) {
+    function discoverReferencesMany(uriArray: URI[], token?: CancellationToken) {
         return discoverMany(discoverReferences, uriArray, token);
     }
 
-    function discoverMany(discoverFn: (uri: Uri, token?: CancellationToken) => Promise<number>, uriArray: Uri[], token?: CancellationToken) {
+    function discoverMany(discoverFn: (uri: URI, token?: CancellationToken) => Promise<number>, uriArray: URI[], token?: CancellationToken) {
 
         if (uriArray.length < 1 || (token && token.isCancellationRequested)) {
             return Promise.resolve<number>(0);
@@ -189,13 +189,13 @@ export namespace WorkspaceDiscovery {
         return new Promise<number>((resolve, reject) => {
             let remaining = uriArray.length;
             let items = uriArray.slice(0);
-            let item: Uri;
+            let item: URI;
             let maxOpenFiles = 8;
             let cancelled = false;
 
             let onAlways = () => {
                 --remaining;
-                let uri: Uri;
+                let uri: URI;
 
                 if (cancelled) {
                     return;
@@ -226,7 +226,7 @@ export namespace WorkspaceDiscovery {
 
     }
 
-    function readTextDocumentItem(uri: Uri) {
+    function readTextDocumentItem(uri: URI) {
 
         return new Promise<TextDocumentItem>((resolve, reject) => {
 
@@ -256,7 +256,7 @@ export namespace WorkspaceDiscovery {
 
     }
 
-    function forgetRequest(uri: Uri | string) {
+    function forgetRequest(uri: URI | string) {
         return client.sendRequest<void>(
             forgetRequestName,
             { uri: uri.toString() }

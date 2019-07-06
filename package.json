@@ -189,19 +189,19 @@
     "devDependencies": {
         "@chemzqm/tsconfig": "^0.0.3",
         "@chemzqm/tslint-config": "^1.0.18",
-        "@types/fs-extra": "^7.0.0",
+        "@types/fs-extra": "^8.0.0",
         "@types/glob": "^7.1.1",
-        "@types/node": "^12.0.2",
-        "coc.nvim": "^0.0.67",
+        "@types/node": "^12.0.12",
+        "coc.nvim": "^0.0.72",
         "rimraf": "^2.6.3",
-        "tslint": "^5.16.0",
-        "typescript": "^3.4.5"
+        "tslint": "^5.18.0",
+        "typescript": "^3.5.2"
     },
     "dependencies": {
         "glob": "^7.1.4",
-        "intelephense": "^1.0.14",
-        "tslib": "^1.9.3",
-        "vscode": "^1.1.34",
+        "intelephense": "^1.1.1",
+        "tslib": "^1.10.0",
+        "vscode": "^1.1.35",
         "vscode-languageclient": "^5.2.1",
         "vscode-languageserver-protocol": "^3.14.1"
     }
