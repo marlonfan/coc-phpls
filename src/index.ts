@@ -18,7 +18,8 @@ import {
     Position,
     CompletionList,
     NotificationType,
-    RequestType
+    RequestType,
+    Disposable
 } from "vscode-languageserver-protocol";
 
 import { CancellationToken } from "vscode-jsonrpc";
@@ -31,12 +32,18 @@ const INDEX_WORKSPACE_REQUEST = new RequestType('indexWorkspace');
 const CANCEL_INDEXING_REQUEST = new RequestType('cancelIndexing');
 
 let languageClient: LanguageClient;
+let extensionContext: ExtensionContext;
+let clientDisposable:Disposable;
+let file: string;
 
 export async function activate(context: ExtensionContext): Promise<void> {
+    extensionContext = context;
+
     let c = workspace.getConfiguration();
     const config = c.get("phpls") as any;
     const enable = config.enable;
-    const file = require.resolve("intelephense");
+
+    file = require.resolve("intelephense");
 
     if (enable === false) return;
     if (!file) {
@@ -47,6 +54,26 @@ export async function activate(context: ExtensionContext): Promise<void> {
         return;
     }
 
+    languageClient = createClient(context, false);
+
+    let indexWorkspaceDisposable = commands.registerCommand('intelephense.index.workspace', indexWorkspace);
+    let cancelIndexingDisposable = commands.registerCommand('intelephense.cancel.indexing', cancelIndexing);
+
+    context.subscriptions.push(
+        indexWorkspaceDisposable,
+        cancelIndexingDisposable,
+    );
+
+    clientDisposable = languageClient.start();
+}
+
+function fixItem(item: CompletionItem): void {
+    if (/^\\\w+/.test(item.insertText) && !/^(\\\w+){2,}/.test(item.insertText)) {
+        item.insertText = item.insertText.replace('\\', '');
+    }
+}
+
+function createClient(context: ExtensionContext, clearCache: boolean) {
     // The debug options for the server
     let debugOptions = {
         execArgv: ["--nolazy", "--inspect=6039", "--trace-warnings", "--preserve-symlinks"],
@@ -70,7 +97,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         ],
         initializationOptions: {
             storagePath: context.storagePath,
-            clearCache: false
+            clearCache: clearCache
         },
         middleware: {
             provideCompletionItem: (
@@ -111,9 +138,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         clientOptions
     );
 
-    let ready = languageClient.onReady();
-
-    ready.then(() => {
+    languageClient.onReady().then(() => {
         languageClient.info('Intelephense ' + VERSION);
 
         let startedTime: Date;
@@ -131,18 +156,20 @@ export async function activate(context: ExtensionContext): Promise<void> {
         });
     });
 
-    let indexWorkspaceDisposable = commands.registerCommand('intelephense.index.workspace', () => languageClient.sendRequest(INDEX_WORKSPACE_REQUEST.method));
-    let cancelIndexingDisposable = commands.registerCommand('intelephense.cancel.indexing', () => languageClient.sendRequest(CANCEL_INDEXING_REQUEST.method));
-
-    context.subscriptions.push(
-        services.registLanguageClient(languageClient),
-        indexWorkspaceDisposable,
-        cancelIndexingDisposable,
-    );
+    return languageClient;
 }
 
-function fixItem(item: CompletionItem): void {
-    if (/^\\\w+/.test(item.insertText) && !/^(\\\w+){2,}/.test(item.insertText)) {
-        item.insertText = item.insertText.replace('\\', '');
-    }
+function indexWorkspace() {
+	if(!languageClient) {
+		return;
+	}
+	languageClient.stop().then(_ => {
+		clientDisposable.dispose();
+		languageClient = createClient(extensionContext, true);
+		clientDisposable = languageClient.start();
+	});
+}
+
+function cancelIndexing() {
+	languageClient.sendRequest(CANCEL_INDEXING_REQUEST.method);
 }

@@ -1,6 +1,6 @@
 {
     "name": "coc-phpls",
-    "version": "2.0.6",
+    "version": "2.0.7",
     "description": "PHP language server extension for coc.nvim",
     "main": "lib/index.js",
     "publisher": "marlonfan",
@@ -191,17 +191,17 @@
         "@chemzqm/tslint-config": "^1.0.18",
         "@types/fs-extra": "^8.0.0",
         "@types/glob": "^7.1.1",
-        "@types/node": "^12.0.12",
-        "coc.nvim": "^0.0.72",
-        "rimraf": "^2.6.3",
+        "@types/node": "^12.7.1",
+        "coc.nvim": "^0.0.73",
+        "rimraf": "^3.0.0",
         "tslint": "^5.18.0",
-        "typescript": "^3.5.2"
+        "typescript": "^3.5.3"
     },
     "dependencies": {
         "glob": "^7.1.4",
-        "intelephense": "^1.1.1",
+        "intelephense": "^1.1.6",
         "tslib": "^1.10.0",
-        "vscode": "^1.1.35",
+        "vscode": "^1.1.36",
         "vscode-languageclient": "^5.2.1",
         "vscode-languageserver-protocol": "^3.14.1"
     }
