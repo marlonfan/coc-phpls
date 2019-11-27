@@ -25,7 +25,8 @@ import {
 import { CancellationToken } from "vscode-jsonrpc";
 
 const LanguageID = 'php';
-const VERSION = '1.0.14';
+
+const VERSION = '1.2.3';
 const INDEXING_STARTED_NOTIFICATION = new NotificationType('indexingStarted');
 const INDEXING_ENDED_NOTIFICATION = new NotificationType('indexingEnded');
 const INDEX_WORKSPACE_REQUEST = new RequestType('indexWorkspace');

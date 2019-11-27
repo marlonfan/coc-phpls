@@ -14,6 +14,18 @@ In your vim/neovim, run command:
 
 Language server features provided by [intelephense-docs](https://github.com/bmewburn/intelephense-docs).
 
+### Premium features
+
+add licence key to your ``coc-settings.json`` file
+
+e.g:
+
+```
+{
+    "intelephense.licenceKey": "your licence key",
+}
+```
+
 ## Configuration options
 
 * `phpls.enable` set to `false` to disable php language server.
