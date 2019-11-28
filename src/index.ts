@@ -97,6 +97,7 @@ function createClient(context: ExtensionContext, clearCache: boolean) {
             { language: LanguageID, scheme: 'untitled' }
         ],
         initializationOptions: {
+            globalStoragePath: context.storagePath,
             storagePath: context.storagePath,
             clearCache: clearCache
         },
