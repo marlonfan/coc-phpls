@@ -19,10 +19,14 @@ import {
     CompletionList,
     NotificationType,
     RequestType,
-    Disposable
+    Disposable,
+    Definition
 } from "vscode-languageserver-protocol";
 
 import { CancellationToken } from "vscode-jsonrpc";
+import { ProvideImplementationSignature } from 'coc.nvim/lib/language-client/implementation';
+import { Location } from 'vscode-languageserver-types';
+import { isArray } from 'util';
 
 const LanguageID = 'php';
 
@@ -129,8 +133,28 @@ function createClient(context: ExtensionContext, clearCache: boolean) {
                         return items;
                     }
                 );
+            },
+            provideImplementation(
+                this: void, document: TextDocument, position: Position, token: CancellationToken, next: ProvideImplementationSignature
+            ): ProviderResult<Location | Location[]> {
+                return Promise.resolve(next(document, position, token)).then(
+                    (res: any) => {
+                        if (!isArray(res)) {
+                            let item = (res as Location)
+                            item["range"] = item["targetRange"]
+                            item["uri"] = item["targetUri"]
+                            return item
+                        }
+                        let itemList = (res as Location[])
+                        itemList.forEach(item => {
+                            item["range"] = item["targetRange"]
+                            item["uri"] = item["targetUri"]
+                        })
+                        return itemList
+                    }
+                )
             }
-        }
+        },
     };
 
     languageClient = new LanguageClient(
