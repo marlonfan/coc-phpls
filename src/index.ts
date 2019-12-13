@@ -40,13 +40,16 @@ let languageClient: LanguageClient;
 let extensionContext: ExtensionContext;
 let clientDisposable:Disposable;
 let file: string;
+let licenceKey: string;
 
 export async function activate(context: ExtensionContext): Promise<void> {
     extensionContext = context;
 
     let c = workspace.getConfiguration();
     const config = c.get("phpls") as any;
+    const intelephenseConfig = c.get("intelephense") as any;
     const enable = config.enable;
+    licenceKey = intelephenseConfig.licenceKey || '';
 
     file = require.resolve("intelephense");
 
@@ -103,7 +106,8 @@ function createClient(context: ExtensionContext, clearCache: boolean) {
         initializationOptions: {
             globalStoragePath: context.storagePath,
             storagePath: context.storagePath,
-            clearCache: clearCache
+            clearCache: clearCache,
+            licenceKey: licenceKey,
         },
         middleware: {
             provideCompletionItem: (
@@ -185,10 +189,11 @@ function createClient(context: ExtensionContext, clearCache: boolean) {
     return languageClient;
 }
 
-function indexWorkspace() {
+function indexWorkspace(licenceKey: string) {
 	if(!languageClient) {
 		return;
-	}
+    }
+
 	languageClient.stop().then(_ => {
 		clientDisposable.dispose();
 		languageClient = createClient(extensionContext, true);
