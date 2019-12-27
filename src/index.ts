@@ -137,26 +137,6 @@ function createClient(context: ExtensionContext, clearCache: boolean) {
                         return items;
                     }
                 );
-            },
-            provideImplementation(
-                this: void, document: TextDocument, position: Position, token: CancellationToken, next: ProvideImplementationSignature
-            ): ProviderResult<Location | Location[]> {
-                return Promise.resolve(next(document, position, token)).then(
-                    (res: any) => {
-                        if (!isArray(res)) {
-                            let item = (res as Location)
-                            item["range"] = item["targetRange"]
-                            item["uri"] = item["targetUri"]
-                            return item
-                        }
-                        let itemList = (res as Location[])
-                        itemList.forEach(item => {
-                            item["range"] = item["targetRange"]
-                            item["uri"] = item["targetUri"]
-                        })
-                        return itemList
-                    }
-                )
             }
         },
     };
