@@ -30,7 +30,6 @@ import { isArray } from 'util';
 
 const LanguageID = 'php';
 
-const VERSION = '1.2.3';
 const INDEXING_STARTED_NOTIFICATION = new NotificationType('indexingStarted');
 const INDEXING_ENDED_NOTIFICATION = new NotificationType('indexingEnded');
 const INDEX_WORKSPACE_REQUEST = new RequestType('indexWorkspace');
@@ -149,8 +148,6 @@ function createClient(context: ExtensionContext, clearCache: boolean) {
     );
 
     languageClient.onReady().then(() => {
-        languageClient.info('Intelephense ' + VERSION);
-
         let startedTime: Date;
 
         languageClient.onNotification(INDEXING_STARTED_NOTIFICATION.method, () => {
