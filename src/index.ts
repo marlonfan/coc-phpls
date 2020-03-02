@@ -82,6 +82,10 @@ function fixItem(item: CompletionItem): void {
 }
 
 function createClient(context: ExtensionContext, clearCache: boolean) {
+    // Config from user
+    let c = workspace.getConfiguration();
+    const config = c.get("phpls") as any;
+
     // The debug options for the server
     let debugOptions = {
         execArgv: ["--nolazy", "--inspect=6039", "--trace-warnings", "--preserve-symlinks"],
@@ -139,6 +143,7 @@ function createClient(context: ExtensionContext, clearCache: boolean) {
                 );
             }
         },
+        disableDiagnostics: !config.validate.enable
     };
 
     languageClient = new LanguageClient(

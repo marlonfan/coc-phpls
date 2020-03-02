@@ -39,6 +39,11 @@
                     "default": "",
                     "description": "enable phpls server trace log?"
                 },
+                "phpls.validate.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "enable phpls code validation"
+                },
                 "intelephense.files.maxSize": {
                     "type": "number",
                     "default": 5000000,
