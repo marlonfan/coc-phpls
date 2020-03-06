@@ -173,10 +173,52 @@
                     "description": "Global namespace constants and functions will be fully qualified (prefixed with a backslash).",
                     "scope": "window"
                 },
+                "intelephense.completion.triggerParameterHints": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Method and function completions will include parentheses and trigger parameter hints.",
+                    "scope": "window"
+                },
+                "intelephense.completion.maxItems": {
+                    "type": "number",
+                    "default": 100,
+                    "description": "The maximum number of completion items returned per request.",
+                    "scope": "window"
+                },
                 "intelephense.format.enable": {
                     "type": "boolean",
                     "default": true,
                     "description": "Enables formatting",
+                    "scope": "window"
+                },
+                "intelephense.telemetry.enabled": {
+                    "type": "boolean",
+                    "description": "Anonymous usage and crash data will be sent to Azure Application Insights.",
+                    "scope": "window",
+                    "default": null
+                },
+                "intelephense.rename.exclude": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [
+                        "**/vendor/**"
+                    ],
+                    "description": "Glob patterns to exclude files and folders from having symbols renamed. Rename operation will fail if references and/or definitions are found in excluded files/folders.",
+                    "scope": "resource"
+                },
+                "intelephense.environment.documentRoot": {
+                    "type": "string",
+                    "description": "The directory of the entry point to the application (index.php). Defaults to the first workspace folder. Used for resolving script inclusion.",
+                    "scope": "window"
+                },
+                "intelephense.environment.includePaths": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "The include paths (as individual path items) as defined in the include_path ini setting. Used for resolving script inclusion.",
                     "scope": "window"
                 },
                 "intelephense.trace.server": {
@@ -208,7 +250,7 @@
     },
     "dependencies": {
         "glob": "^7.1.4",
-        "intelephense": "^1.3.6",
+        "intelephense": "^1.3.11",
         "tslib": "^1.10.0",
         "vscode": "^1.1.36",
         "vscode-languageclient": "^5.2.1",
