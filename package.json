@@ -39,6 +39,18 @@
                     "default": "",
                     "description": "enable phpls server trace log?"
                 },
+                "intelephense.compatibility.correctForBaseClassStaticUnionTypes": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Resolves `BaseClass|static` union types to `static` instead of `BaseClass`.",
+                    "scope": "window"
+                },
+                "intelephense.compatibility.correctForArrayAccessArrayAndTraversableArrayUnionTypes": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Resolves `ArrayAccess` and `Traversable` implementations that are unioned with a typed array to generic syntax. eg `ArrayAccessOrTraversable|ElementType[]` => `ArrayAccessOrTraversable<mixed, ElementType>`.",
+                    "scope": "window"
+                },
                 "intelephense.files.maxSize": {
                     "type": "number",
                     "default": 5000000,
@@ -354,6 +366,22 @@
                     "description": "Enables formatting",
                     "scope": "window"
                 },
+                "intelephense.format.braces": {
+                    "type": "string",
+                    "default": "psr12",
+                    "enum": [
+                        "psr12",
+                        "allman",
+                        "k&r"
+                    ],
+                    "enumDescriptions": [
+                        "PHP-FIG PSR-2 and PSR-12 style. A mix of Allman and K&R",
+                        "Allman. Opening brace on the next line.",
+                        "K&R (1TBS). Opening brace on the same line."
+                    ],
+                    "description": "Controls formatting style of braces",
+                    "scope": "window"
+                },
                 "intelephense.environment.documentRoot": {
                     "type": "string",
                     "description": "The directory of the entry point to the application (directory of index.php). Can be absolute or relative to the workspace folder. Used for resolving script inclusion.",
@@ -366,6 +394,150 @@
                     },
                     "description": "The include paths (as individual path items) as defined in the include_path ini setting or paths to external libraries. Used for resolving script inclusion and/or adding external symbols to folder.",
                     "scope": "resource"
+                },
+                "intelephense.environment.phpVersion": {
+                    "type": "string",
+                    "default": "7.4.0",
+                    "description": "A semver compatible string that represents the target PHP version. Used for providing version appropriate suggestions and diagnostics. PHP 5.3.0 and greater supported.",
+                    "scope": "window"
+                },
+                "intelephense.environment.shortOpenTag": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "When enabled '<?' will be parsed as a PHP open tag. Defaults to false.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables diagnostics.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.run": {
+                    "type": "string",
+                    "default": "onType",
+                    "enum": [
+                        "onType",
+                        "onSave"
+                    ],
+                    "enumDescriptions": [
+                        "Diagnostics will run as changes are made to the document.",
+                        "Diagnostics will run when the document is saved."
+                    ],
+                    "description": "Controls when diagnostics are run.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.embeddedLanguages": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables diagnostics in embedded languages.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.undefinedSymbols": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "DEPRECATED. Use the setting for each symbol category.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.undefinedVariables": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables undefined variable diagnostics.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.undefinedTypes": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables undefined class, interface and trait diagnostics.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.undefinedFunctions": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables undefined function diagnostics.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.undefinedConstants": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables undefined constant diagnostics.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.undefinedClassConstants": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables undefined class constant diagnostics.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.undefinedMethods": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables undefined method diagnostics.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.undefinedProperties": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables undefined static property diagnostics.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.unusedSymbols": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables unused variable, private member, and import diagnostics.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.unexpectedTokens": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables unexpected token diagnostics.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.duplicateSymbols": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables duplicate symbol diagnostics.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.argumentCount": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables argument count diagnostics.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.typeErrors": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables diagnostics on type compatibility of arguments, property assignments, and return statements where types have been declared.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.deprecated": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables deprecated diagnostics.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.languageConstraints": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables reporting of various language constraint errors.",
+                    "scope": "window"
+                },
+                "intelephense.diagnostics.implementationErrors": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enables reporting of problems associated with method and class implementations. For example, unimplemented methods or method signature incompatibilities.",
+                    "scope": "window"
+                },
+                "intelephense.runtime": {
+                    "type": "string",
+                    "description": "Path to a Node.js executable. Use this if you wish to use a different version of Node.js. Defaults to Node.js shipped with VSCode.",
+                    "scope": "machine"
+                },
+                "intelephense.maxMemory": {
+                    "type": "number",
+                    "description": "Maximum memory (in MB) that the server should use. On some systems this may only have effect when runtime has been set. Minimum 256.",
+                    "scope": "window"
                 },
                 "intelephense.licenceKey": {
                     "type": "string",
@@ -387,6 +559,128 @@
                     ],
                     "description": "Glob patterns to exclude files and folders from having symbols renamed. Rename operation will fail if references and/or definitions are found in excluded files/folders.",
                     "scope": "resource"
+                },
+                "intelephense.references.exclude": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [
+                        "**/vendor/**"
+                    ],
+                    "description": "Glob patterns matching files and folders that should be excluded from references search.",
+                    "scope": "resource"
+                },
+                "intelephense.phpdoc.returnVoid": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Adds `@return void` to auto generated phpdoc for definitions that do not return a value.",
+                    "scope": "window"
+                },
+                "intelephense.phpdoc.textFormat": {
+                    "type": "string",
+                    "enum": [
+                        "snippet",
+                        "text"
+                    ],
+                    "default": "snippet",
+                    "enumDescriptions": [
+                        "Auto generated phpdoc is returned in snippet format. Templates are partially resolved by evaluating phpdoc specific variables only.",
+                        "Auto generated phpdoc is returned as plain text. Templates are resolved completely by the server."
+                    ],
+                    "scope": "window"
+                },
+                "intelephense.phpdoc.classTemplate": {
+                    "type": "object",
+                    "properties": {
+                        "summary": {
+                            "type": "string",
+                            "description": "A snippet string representing a phpdoc summary."
+                        },
+                        "description": {
+                            "type": "string",
+                            "description": "A snippet string representing a phpdoc description."
+                        },
+                        "tags": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "An array of snippet strings representing phpdoc tags."
+                        }
+                    },
+                    "default": {
+                        "summary": "$1",
+                        "tags": [
+                            "@package ${1:$SYMBOL_NAMESPACE}"
+                        ]
+                    },
+                    "description": "An object that describes the format of generated class/interface/trait phpdoc. The following snippet variables are available: SYMBOL_NAME; SYMBOL_KIND; SYMBOL_TYPE; SYMBOL_NAMESPACE.",
+                    "scope": "window"
+                },
+                "intelephense.phpdoc.propertyTemplate": {
+                    "type": "object",
+                    "properties": {
+                        "summary": {
+                            "type": "string",
+                            "description": "A snippet string representing a phpdoc summary."
+                        },
+                        "description": {
+                            "type": "string",
+                            "description": "A snippet string representing a phpdoc description."
+                        },
+                        "tags": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "An array of snippet strings representing phpdoc tags."
+                        }
+                    },
+                    "default": {
+                        "summary": "$1",
+                        "tags": [
+                            "@var ${1:$SYMBOL_TYPE}"
+                        ]
+                    },
+                    "description": "An object that describes the format of generated property phpdoc. The following snippet variables are available: SYMBOL_NAME; SYMBOL_KIND; SYMBOL_TYPE; SYMBOL_NAMESPACE.",
+                    "scope": "window"
+                },
+                "intelephense.phpdoc.functionTemplate": {
+                    "type": "object",
+                    "properties": {
+                        "summary": {
+                            "type": "string",
+                            "description": "A snippet string representing a phpdoc summary."
+                        },
+                        "description": {
+                            "type": "string",
+                            "description": "A snippet string representing a phpdoc description."
+                        },
+                        "tags": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "An array of snippet strings representing phpdoc tags."
+                        }
+                    },
+                    "default": {
+                        "summary": "$1",
+                        "tags": [
+                            "@param ${1:$SYMBOL_TYPE} $SYMBOL_NAME $2",
+                            "@return ${1:$SYMBOL_TYPE} $2",
+                            "@throws ${1:$SYMBOL_TYPE} $2"
+                        ]
+                    },
+                    "description": "An object that describes the format of generated function/method phpdoc. The following snippet variables are available: SYMBOL_NAME; SYMBOL_KIND; SYMBOL_TYPE; SYMBOL_NAMESPACE.",
+                    "scope": "window"
+                },
+                "intelephense.phpdoc.useFullyQualifiedNames": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Fully qualified names will be used for types when true. When false short type names will be used and imported where appropriate. Overrides intelephense.completion.insertUseDeclaration.",
+                    "scope": "window"
                 },
                 "intelephense.trace.server": {
                     "type": "string",
