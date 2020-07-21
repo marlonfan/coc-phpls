@@ -57,7 +57,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
             file = require.resolve(config.path);
             if (file.endsWith("intelephense.js") === false) throw new Error();
 
-            /* ---- See :CocOpenlog ---- */
+            /* ---- See :CocOpenLog ---- */
             extensionContext.logger.info(
                 "intelephense module (phpls.path) is ready to be started"
             );
@@ -73,7 +73,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
             file = require.resolve("intelephense");
             if (file.endsWith("intelephense.js") === false) throw new Error();
 
-            /* ---- See :CocOpenlog ---- */
+            /* ---- See :CocOpenLog ---- */
             extensionContext.logger.info(
                 "intelephense module (builtin) is ready to be started"
             );
