@@ -28,7 +28,8 @@ e.g:
 
 ## Configuration options
 
-* `phpls.enable` set to `false` to disable php language server.
+* `phpls.path`: Path to intelephense module, you can use a custom version of intelephense by modifying this setting to include the full path. e.g. `/path/to/node_modules/intelephens`. default: `""`
+* `phpls.enable`: Set to `false` to disable php language server. default: `true`
 
 ## Development
 

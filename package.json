@@ -27,7 +27,7 @@
                 "phpls.path": {
                     "type": "string",
                     "default": "",
-                    "description": "lsp server path"
+                    "description": "Path to intelephense module, you can use a custom version of intelephense by modifying this setting to include the full path."
                 },
                 "phpls.enable": {
                     "type": "boolean",
