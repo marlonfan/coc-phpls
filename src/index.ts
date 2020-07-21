@@ -27,6 +27,7 @@ import { CancellationToken } from "vscode-jsonrpc";
 import { ProvideImplementationSignature } from 'coc.nvim/lib/language-client/implementation';
 import { Location } from 'vscode-languageserver-types';
 import { isArray } from 'util';
+import { existsSync  } from "fs";
 
 const LanguageID = 'php';
 
@@ -50,15 +51,39 @@ export async function activate(context: ExtensionContext): Promise<void> {
     const enable = config.enable;
     licenceKey = intelephenseConfig.licenceKey || '';
 
-    file = require.resolve("intelephense");
-
     if (enable === false) return;
-    if (!file) {
-        workspace.showMessage(
-            "intelephense-server not found!, please run yarn global add intelephense-server",
-            "error"
-        );
-        return;
+    if (existsSync(config.path)) {
+        try {
+            file = require.resolve(config.path);
+            if (file.endsWith("intelephense.js") === false) throw new Error();
+
+            /* ---- See :CocOpenlog ---- */
+            extensionContext.logger.info(
+                "intelephense module (phpls.path) is ready to be started"
+            );
+        } catch (e) {
+            workspace.showMessage(
+                "intelephense module not found! phpls.path is invalid.",
+                "error"
+            );
+            return;
+        }
+    } else {
+        try {
+            file = require.resolve("intelephense");
+            if (file.endsWith("intelephense.js") === false) throw new Error();
+
+            /* ---- See :CocOpenlog ---- */
+            extensionContext.logger.info(
+                "intelephense module (builtin) is ready to be started"
+            );
+        } catch (e) {
+            workspace.showMessage(
+                "intelephense module not found! builtin module is invalid",
+                "error"
+            );
+            return;
+        }
     }
 
     languageClient = createClient(context, false);
