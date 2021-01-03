@@ -711,7 +711,7 @@
     },
     "dependencies": {
         "glob": "^7.1.4",
-        "intelephense": "1.5.2",
+        "intelephense": "~1.6.0",
         "tslib": "^1.10.0",
         "vscode": "^1.1.36",
         "vscode-languageclient": "^5.2.1",
