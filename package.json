@@ -91,6 +91,7 @@
                     "items": {
                         "type": "string",
                         "enum": [
+                            "aerospike",
                             "amqp",
                             "apache",
                             "apcu",
@@ -149,6 +150,7 @@
                             "libsodium",
                             "libxml",
                             "lua",
+                            "LuaSandbox",
                             "lzf",
                             "mailparse",
                             "mapscript",
@@ -221,6 +223,7 @@
                             "stomp",
                             "suhosin",
                             "superglobals",
+                            "svm",
                             "svn",
                             "sybase",
                             "sync",
@@ -240,6 +243,7 @@
                             "xcache",
                             "xdebug",
                             "xhprof",
+                            "xlswriter",
                             "xml",
                             "xmlreader",
                             "xmlrpc",
