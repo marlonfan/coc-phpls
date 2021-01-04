@@ -1,6 +1,6 @@
 {
     "name": "coc-phpls",
-    "version": "2.1.10",
+    "version": "2.2.0",
     "description": "PHP language server extension for coc.nvim",
     "main": "lib/index.js",
     "publisher": "marlonfan",
