@@ -943,10 +943,10 @@ int64-buffer@^0.1.9:
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/int64-buffer/-/int64-buffer-0.1.10.tgz#277b228a87d95ad777d07c13832022406a473423"
 
-intelephense@~1.7:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/intelephense/-/intelephense-1.7.1.tgz#d3b6ae304952b7bb01fcd25b1c7ac753493318b4"
-  integrity sha512-fIAeUVrsGs2/yX/GopLwXIw17t3aekM1KrOJ7r9xJhA1VlGoR+YtIFxdXLcOnC1oRRdBkEz46xZEHZh5W+3vwQ==
+intelephense@~1.8:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/intelephense/-/intelephense-1.8.0.tgz#da111e62e741d26924aa5339c7524f998583e3dd"
+  integrity sha512-DigAEcRfvGX1f/FExvvHTuImCu9EC7XtvAFDISsXvMTFTnMlAnNKcQvcVcZDWREa9NRKXSH5HD8a7lV+a25eBg==
   dependencies:
     "@bmewburn/js-beautify" "~1.13.0"
     "@bmewburn/turndown" "~5.0.3"
