@@ -708,7 +708,7 @@
         "@types/fs-extra": "^8.0.0",
         "@types/glob": "^7.1.1",
         "@types/node": "^12.7.1",
-        "coc.nvim": "^0.0.76",
+        "coc.nvim": "^0.0.80",
         "rimraf": "^3.0.0",
         "tslint": "^5.18.0",
         "typescript": "^3.5.3"
