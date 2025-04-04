@@ -51,7 +51,8 @@ cd ~/.config/coc/extensions && yarn link coc-phpls
 
 ## Thanks
 
-[![image](https://static.zhire.de/uPic/2025/04/911ce4a6df6861af44a363b034db8712.png)](https://yxvm.com/aff.php?aff=768)
+<a href="https://yxvm.com/aff.php?aff=768" target="_blank"><img src="https://static.zhire.de/uPic/2025/04/911ce4a6df6861af44a363b034db8712.png" width="250"/></a>
+
 [NodeSupport](https://github.com/NodeSeekDev/NodeSupport) Sponsored this project
 
 ![]()
@@ -59,6 +60,3 @@ cd ~/.config/coc/extensions && yarn link coc-phpls
 ## License
 
 MIT
-
-[![image](iframe组件截图图片链接)](https://yxvm.com/)
-[NodeSupport](https://github.com/NodeSeekDev/NodeSupport)赞助了本项目
