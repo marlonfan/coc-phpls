@@ -49,6 +49,16 @@ cd ~/.config/coc/extensions && yarn link coc-phpls
 
 <a href="https://www.jetbrains.com/?from=gnet" target="_blank"><img src="https://raw.githubusercontent.com/panjf2000/illustrations/master/jetbrains/jetbrains-variant-4.png" width="250" align="middle"/></a>
 
+## Thanks
+
+[![image](https://static.zhire.de/uPic/2025/04/911ce4a6df6861af44a363b034db8712.png)](https://yxvm.com/aff.php?aff=768)
+[NodeSupport](https://github.com/NodeSeekDev/NodeSupport) Sponsored this project
+
+![]()
+
 ## License
 
 MIT
+
+[![image](iframe组件截图图片链接)](https://yxvm.com/)
+[NodeSupport](https://github.com/NodeSeekDev/NodeSupport)赞助了本项目
